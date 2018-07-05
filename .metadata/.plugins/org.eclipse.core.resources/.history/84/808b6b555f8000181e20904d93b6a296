@@ -1,0 +1,2 @@
+spring.mvc.view.prefix: /webapps/
+spring.mvc.view.suffix: .jsp
