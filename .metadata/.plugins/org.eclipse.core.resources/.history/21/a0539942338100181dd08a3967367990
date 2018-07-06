@@ -47,8 +47,8 @@ public static int orderid;
 public int bill;
 static Logger logger =Logger.getLogger(AppController.class);
 
-@RequestMapping("/login")
-public String login(Principal principal)
+@RequestMapping("/login/{id}")
+public String login(@PathVariable String id,Principal principal)
 {	if(principal==null)
 	{
 	order = new HashMap<String,ArrayList<OrderDetails>>();	
@@ -63,7 +63,13 @@ else
 @RequestMapping(value= {"/","/home"})
 public String home()
 {
-	return "redirect:/users/"+CustomAuth.username;
+	return "redirect:/users/"+CustomAuth.username.toUpperCase();
+/*username=CustomAuth.username.toUpperCase();
+logger.info("User"+username+" logged in");
+
+model.addAttribute("name",username);
+model.addAttribute("locations", hotelrepository.findAllLocations());	
+return "home";*/
 }
 
 @RequestMapping(value= {"/users/{uname}"})

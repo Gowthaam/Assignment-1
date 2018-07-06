@@ -64,6 +64,12 @@ else
 public String home()
 {
 	return "redirect:/users/"+CustomAuth.username;
+/*username=CustomAuth.username.toUpperCase();
+logger.info("User"+username+" logged in");
+
+model.addAttribute("name",username);
+model.addAttribute("locations", hotelrepository.findAllLocations());	
+return "home";*/
 }
 
 @RequestMapping(value= {"/users/{uname}"})
