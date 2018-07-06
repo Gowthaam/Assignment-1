@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -39,7 +40,8 @@ OrderRepository orderrepository;
 @Autowired 
 ReviewRepository reviewrepository;
 public  Map<String,ArrayList<OrderDetails>> order = new HashMap<String,ArrayList<OrderDetails>>();
-
+@Value("${context}")
+String context;
 
 public static String hotelName = new String("");
 public static String username = new String("");
