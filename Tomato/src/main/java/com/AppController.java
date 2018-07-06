@@ -1,5 +1,6 @@
 package com;
 
+import java.security.Principal;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.model.User;
+import com.config.CustomAuth;
 import com.model.Order;
+import com.model.Review;
 import com.repository.HotelRepository;
 import com.repository.ItemRepository;
 import com.repository.OrderRepository;
+import com.repository.ReviewRepository;
 import com.repository.UsersRepository;
+import org.apache.log4j.Logger;
 
 
 @Controller
@@ -30,57 +35,46 @@ HotelRepository hotelrepository;
 ItemRepository itemrepository;
 @Autowired 
 OrderRepository orderrepository;
-//public static Map<String,String> users = new HashMap<String,String>();
-//public static List <Locations> l = new ArrayList<Locations>();
-//public static List <Hotels> h = new ArrayList<Hotels>();
-//public static Map<String,ArrayList<Items>> menu = new HashMap<String,ArrayList<Items>>();
+@Autowired 
+ReviewRepository reviewrepository;
 public  Map<String,ArrayList<OrderDetails>> order = new HashMap<String,ArrayList<OrderDetails>>();
-public Map<String,ArrayList<Invoice>> invoices = new HashMap<String,ArrayList<Invoice>>();
-public Map<String,ArrayList<Rating>> randr = new HashMap<String,ArrayList<Rating>>();
 
 
 public static String hotelName = new String("");
 public static String username = new String("");
-public static int orderid=555;
+public static int orderid;
 public int bill;
-static // Seed Data  
-{
-	/*l.add(new Locations("Hitech-city"));
-	l.add(new Locations("Gachibowli"));
-	
-	h.add(new Hotels("1","swagath","Hitech-city"));
-	h.add(new Hotels("2","flechazo","Hitech-city"));
-	h.add(new Hotels("3","taj","Gachibowli"));
-	
-	menu.put("swagath", new ArrayList<Items>());
-	menu.put("flechazo", new ArrayList<Items>());
-	menu.put("taj", new ArrayList<Items>());
-	
-	menu.get("swagath").add(new Items("biryani",100));
-	menu.get("swagath").add(new Items("ice-cream",50));
-	menu.get("flechazo").add(new Items("noodles",70));
-	menu.get("taj").add(new Items("manchuria",90));*/
-}
+static Logger logger =Logger.getLogger(AppController.class);
 
 @RequestMapping("/login")
-public String login()
-{
+public String login(Principal principal)
+{	if(principal==null)
+	{
 	order = new HashMap<String,ArrayList<OrderDetails>>();	
-return "login";	
+	logger.info("entered login page");
+	return "login";
+	
+	}
+else 
+	return "redirect:/home"; 
 }
 	
-@RequestMapping("/")
+@RequestMapping(value= {"/","/home"})
 public String home(Model model)
 {
 username=CustomAuth.username.toUpperCase();
+logger.info("User"+username+" logged in");
+
 model.addAttribute("name",username);
 model.addAttribute("locations", hotelrepository.findAllLocations());	
 return "home"; 	
 }
 
-@RequestMapping(value="/",method=RequestMethod.POST)
+@RequestMapping(value="/hotels",method=RequestMethod.GET)
 public String hotels(@ModelAttribute("inp") Locations inp,Model model)
 {	
+	logger.info("Location"+inp.name+" Selected");
+
 	model.addAttribute("place", inp.name);
 	model.addAttribute("hotels",hotelrepository.findByLocation(inp.name));
 	return "hotels";	
@@ -91,18 +85,54 @@ public String menu(@ModelAttribute("inp") Hotels inp,Model model)
 {
 if(inp.name!=null||inp.name!="")
 hotelName=inp.name; 	
-//ArrayList <Items> temp = menu.get(hotelName); 
+logger.info("hotel: "+hotelName+" Selected");
+
 model.addAttribute("place",hotelName);
 model.addAttribute("menu",itemrepository.findByHname(hotelName));
+
+int totalBill=0;
+ArrayList<OrderDetails> temp1 = new ArrayList<OrderDetails>();
+
+	if(order.get(hotelName)!=null)
+	for(OrderDetails y : order.get(hotelName))
+		{
+		temp1.add(new OrderDetails(y.getItem(),y.getQuantity(),y.quantity*y.getPrice()));
+		totalBill+=y.quantity*y.getPrice();
+		}
+
+bill=totalBill;
+model.addAttribute("cart", temp1);
+model.addAttribute("totalBill",totalBill);
+
+return "menu";}
+
+@RequestMapping(value="/menu")
+public String menuGet(Model model)
+{
+
+model.addAttribute("place",hotelName);
+model.addAttribute("menu",itemrepository.findByHname(hotelName));
+
+int totalBill=0;
+ArrayList<OrderDetails> temp1 = new ArrayList<OrderDetails>();
+
+	if(order.get(hotelName)!=null)
+	for(OrderDetails y : order.get(hotelName))
+		{
+		temp1.add(new OrderDetails(y.getItem(),y.getQuantity(),y.quantity*y.getPrice()));
+		totalBill+=y.quantity*y.getPrice();
+		}
+
+bill=totalBill;
+model.addAttribute("cart", temp1);
+model.addAttribute("totalBill",totalBill);
 
 return "menu";
 }
 
-
 @RequestMapping(value="/addItem",method=RequestMethod.POST)
 public String menu(@ModelAttribute("inp") OrderDetails inp,Model model)
 {
-	//System.out.println("not added!"+inp.name+inp.quantity+inp.price);
 
 	if(inp.quantity>0)
 	{
@@ -132,16 +162,12 @@ public String menu(@ModelAttribute("inp") OrderDetails inp,Model model)
 	
 	}
 
-
-//ArrayList <Items> temp = menu.get(hotelName); 
-model.addAttribute("place",hotelName);
-model.addAttribute("menu",itemrepository.findByHname(hotelName));
+ 
 
 int totalBill=0;
 ArrayList<OrderDetails> temp1 = new ArrayList<OrderDetails>();
 
-//Set<String> keys = order.keySet();
-//for(String x : keys )
+	if(order.get(hotelName)!=null)
 	for(OrderDetails y : order.get(hotelName))
 		{
 		temp1.add(new OrderDetails(y.getItem(),y.getQuantity(),y.quantity*y.getPrice()));
@@ -149,9 +175,9 @@ ArrayList<OrderDetails> temp1 = new ArrayList<OrderDetails>();
 		}
 
 bill=totalBill;
-model.addAttribute("cart", temp1);
-model.addAttribute("totalBill",totalBill);
-return "menu";
+
+return "redirect:/menu"; 
+
 }
 
 @RequestMapping(value="removeItem",method=RequestMethod.POST)
@@ -163,15 +189,9 @@ public String removeItem(@ModelAttribute("inp") OrderDetails inp,Model model)
 				order.get(hotelName).remove(x);
 				break;
 			}
-	//ArrayList <Items> temp = menu.get(hotelName); 
-	model.addAttribute("place",hotelName);
-	model.addAttribute("menu",itemrepository.findByHname(hotelName));
-	
 	int totalBill=0;
 	ArrayList<OrderDetails> temp1 = new ArrayList<OrderDetails>();
 
-	//Set<String> keys = order.keySet();
-	//for(String x : keys )
 		if(order.get(hotelName)!=null)
 		for(OrderDetails y : order.get(hotelName))
 			{
@@ -180,23 +200,13 @@ public String removeItem(@ModelAttribute("inp") OrderDetails inp,Model model)
 			}
 
 		bill=totalBill;
-	model.addAttribute("cart", temp1);
-	model.addAttribute("totalBill",totalBill);
-	return "menu";
+	return "redirect:/menu"; 
 }
 
 @RequestMapping(value="/checkout",method = RequestMethod.POST)
 public String checkout(Model model)
 {
-/*if(invoices.get(username)==null)
-{
-ArrayList<Invoice> al = new ArrayList<Invoice>();
-al.add(new Invoice(orderid++,hotelName,bill,order.get(hotelName)));
-invoices.put(username, al);
-}
-else
-invoices.get(username).add(new Invoice(orderid++,hotelName,bill,order.get(hotelName)));*/	
-//order.remove("hotelName");
+
 Random rand = new Random();
  orderid=rand.nextInt(1000);
 while(orderrepository.findByOrderid(orderid).isEmpty()==false)
@@ -210,40 +220,53 @@ System.out.println(orderid);
 	temp.setUname(username);
 	temp.setItem(x.item);
 	temp.setPrice(x.price);
+	temp.setQuantity(x.getQuantity());
 	temp.setTotal(bill);
 	orderrepository.save(temp);	
 }
+	order.put(hotelName, null);
+return "redirect:/checkout";	
+}
+
+@RequestMapping(value="/checkout")
+public String checkoutPage(Model model)
+{
 return "checkout";	
 }
 
 @RequestMapping(value="/submit-rating",method=RequestMethod.POST)
 public String review(@ModelAttribute("inp") Rating inp,Model model)
 {
-	Rating temp = new Rating(username,inp.rating,inp.review);
-	if(randr.get(hotelName)==null)
-	{
-		ArrayList<Rating> temp1 = new ArrayList<Rating>();
-		temp1.add(temp);
-		randr.put(hotelName,temp1);
-	}
-	else
-		randr.get(hotelName).add(temp);
-	
+	Review r = new Review();
+	r.setHname(hotelName);
+	r.setUname(username);
+	r.setRating(inp.rating);
+	r.setReview(inp.review);
+	reviewrepository.save(r);
+	return "redirect:/submit-rating";
+}
+@RequestMapping(value="/submit-rating")
+public String review(Model model)
+{
 	return "thanks";
 }
+
+
 
 @RequestMapping("view-reviews")
 public String viewReviews(Model model)
 {
+	List<Review> r = reviewrepository.findByHname(hotelName);
 	model.addAttribute("name",hotelName);
-	model.addAttribute("reviews",randr.get(hotelName));
+	model.addAttribute("reviews",r);
 
+	
 	return "view-reviews";
 }
 
 
-@RequestMapping(value="/view-orders",method = RequestMethod.POST)
-public String viewUsers(Model model)
+@RequestMapping(value="/view-orders",method = RequestMethod.GET)
+public String viewOrders(Model model)
 {
 	
 	model.addAttribute("name", username);
@@ -251,7 +274,7 @@ public String viewUsers(Model model)
 	List<Order> x = orderrepository.findByUname(username);
 	List<OrderClone> temp = new ArrayList<OrderClone>();
 	for(Order y : x )
-		temp.add(new OrderClone(y.getOrderid(),y.getUname(),y.getHname(),y.getItem(),y.getPrice(),y.getTotal()));
+		temp.add(new OrderClone(y.getOrderid(),y.getUname(),y.getHname(),y.getItem(),y.getPrice(),y.getQuantity(),y.getTotal()));
 	Map<Integer,ArrayList<OrderClone>> tempmap = new HashMap<Integer,ArrayList<OrderClone>>();
 	
 	for(OrderClone y : temp)
@@ -265,25 +288,36 @@ public String viewUsers(Model model)
 		else
 			tempmap.get(y.orderid).add(y);
 	}
+	
+	
 	ArrayList<DisplayOrder> disp = new ArrayList<DisplayOrder>();
 	Set<Integer> keys = tempmap.keySet();
 
 	for(int i : keys)
 	{
+		System.out.println("id: " + i);
+		
 		DisplayOrder tempo=new DisplayOrder();
 		tempo.orderid=i;
+		tempo.items=new ArrayList<OrderClone>();
 		for(OrderClone e : tempmap.get(i))
 			{
-			tempo.items=new ArrayList<OrderClone>();
+			
 			tempo.items.add(e);
+			System.out.println(e.item);
 			tempo.hname=e.hname;
 			tempo.total=e.total;
+			
+
 			}
 		
 		
 		disp.add(tempo);
 	}
 	 
+	for(DisplayOrder r : disp)
+		for(OrderClone e : r.items )
+			
 	
 	model.addAttribute("invoices",disp);
 	return "vieworder";
@@ -323,7 +357,28 @@ public String loginFail()
 return "login-failure"; 	
 }
 
+@RequestMapping("/forgot-password")
+public String forgotPassword()
+{
+return "forgot";
+}
 
+@RequestMapping(value="/forgot-password",method = RequestMethod.POST)
+public String forgotReply(@ModelAttribute("inp") Users inp , Model model)
+{
+	if(usersrepository.findByUname(inp.uname).isEmpty())
+		{
+		model.addAttribute("answer",  "Username not found ! Please Register");
+		return "forgotreply";
+		}
+	else
+		{
+		model.addAttribute("answer",  "Hi "+inp.uname.toUpperCase()+"! Password has been sent to your registered Mail.");
+		return "forgotreply";
+		}	
+	
+
+}
 
 
 }

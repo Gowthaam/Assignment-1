@@ -6,18 +6,48 @@
 
 <html lang="en">
 <head>
-<h1>Welcome to ${place} restaurant!!</h1>
+
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+body {font-family: "Times New Roman", Georgia, Serif;}
+h1,h2,h3,h4,h5,h6 {
+    font-family: "Playfair Display";
+    letter-spacing: 5px;
+}
+</style>
+<body>
+
+<!-- Navbar (sit on top) -->
+<div class="w3-top">
+  <div class="w3-bar w3-white w3-padding w3-card" style="letter-spacing:4px;">
+    <a href="/" class="w3-bar-item w3-button">Tomato ~ The Food Ordering App</a>
+    <!-- Right-sided navbar links. Hide them on small screens -->
+    <div class="w3-right w3-hide-small">
+    <a href="/view-reviews"class="w3-bar-item w3-button">VIEW RATINGS & REVIEWS</a>
+    <a href="/view-orders" class="w3-bar-item w3-button">VIEW-ORDERS</a>
+		<a href="/app-logout" class="w3-bar-item w3-button">LOGOUT</a>
+    </div>
+  </div>
+</div>
+
+
+
+
 </head>
 <body>
 <br />
-<a href="/view-reviews">View Ratings and Reviews</a>
-<table>
+<div class="w3-container w3-padding-64" id="contact">
+<h4>Welcome to ${place} restaurant!!</h4>
+<table border=1>
 <tr>
-<th>Name</th>
-<th>Price</th>
-<th>Quantity</th>
-<th>Add</th>
+<th>NAME</th>
+<th>PRICE</th>
+<th>QUANTITY</th>
+<th>ADD</th>
 </tr>
 <c:forEach var="x" items="${menu}">
 <tr>
@@ -35,14 +65,14 @@
 </table>
 
 <br />
-<h4>Your Food Basket</h4>
+<h4>YOUR FOOD BASKET ::</h4>
 
-<table>
+<table border="1" >
 <tr>
-<th>Name</th>
-<th>Total Price</th>
-<th>Quantity</th>
-<th>Remove</th>
+<th>NAME</th>
+<th>TOTAL PRICE</th>
+<th>QUANTITY</th>
+<th>REMOVE</th>
 </tr>
 <c:forEach var="x" items="${cart}">
 <tr>
@@ -63,13 +93,11 @@
 <c:if test = "${totalBill > 0}" >
 <br />
 <form method="post" action="/checkout">
-<input type="submit" value="Checkout">
+<input class="w3-button w3-light-grey w3-section" type="submit" value="CHECKOUT">
 </form>
 </c:if>
 
 <br />
-<form  method="post" action="/app-logout" >
-<input type="submit" value="Logout">
-</form>
+</div>
 </body>
 </html>

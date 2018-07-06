@@ -13,19 +13,21 @@ public class OrderClone {
 	 String hname;
 	String item;
 	 int price;
+	 int quantity;
 	 int total;
 	
 	
 	public OrderClone()
 	{}
 
-	public OrderClone(int orderid,String uname,String hname,String item,int price,int total)
+	public OrderClone(int orderid,String uname,String hname,String item,int price,int quantity,int total)
 	{
 		this.orderid=orderid;
 		this.uname=uname;
 		this.hname=hname;
 		this.item=item;
 		this.price=price;
+		this.quantity=quantity;
 		this.total=total;
 	}
 	
@@ -78,6 +80,14 @@ public class OrderClone {
 		this.price=(int)price;
 	}
 	
+	public int getQuantity()
+	{
+		return quantity;
+	}
+	public void setQuantity(Object quantity)
+	{
+		this.total=(int)quantity;
+	}
 	
 	public int getTotal()
 	{

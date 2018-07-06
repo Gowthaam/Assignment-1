@@ -26,6 +26,8 @@ public class Order {
 	private String item;
 	@Column(name="price")
 	private int price;
+	@Column(name="quantity")
+	private int quantity;
 	@Column(name="total")
 	private int total;
 	
@@ -89,6 +91,15 @@ public class Order {
 	public void setPrice(Object price)
 	{
 		this.price=(int)price;
+	}
+	
+	public int getQuantity()
+	{
+		return quantity;
+	}
+	public void setQuantity(Object quantity)
+	{
+		this.quantity=(int)quantity;
 	}
 	
 	
