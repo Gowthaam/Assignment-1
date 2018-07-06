@@ -2,6 +2,7 @@ package com;
 
 import java.util.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -10,16 +11,29 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.model.User;
+import com.model.Order;
+import com.repository.HotelRepository;
+import com.repository.ItemRepository;
+import com.repository.OrderRepository;
+import com.repository.UsersRepository;
+
 
 @Controller
 public class AppController 
 {
-
-	
-public static Map<String,String> users = new HashMap<String,String>();
-public static List <Locations> l = new ArrayList<Locations>();
-public static List <Hotels> h = new ArrayList<Hotels>();
-public static Map<String,ArrayList<Item>> menu = new HashMap<String,ArrayList<Item>>();
+@Autowired
+UsersRepository usersrepository;
+@Autowired
+HotelRepository hotelrepository;
+@Autowired
+ItemRepository itemrepository;
+@Autowired 
+OrderRepository orderrepository;
+//public static Map<String,String> users = new HashMap<String,String>();
+//public static List <Locations> l = new ArrayList<Locations>();
+//public static List <Hotels> h = new ArrayList<Hotels>();
+//public static Map<String,ArrayList<Items>> menu = new HashMap<String,ArrayList<Items>>();
 public  Map<String,ArrayList<OrderDetails>> order = new HashMap<String,ArrayList<OrderDetails>>();
 public Map<String,ArrayList<Invoice>> invoices = new HashMap<String,ArrayList<Invoice>>();
 public Map<String,ArrayList<Rating>> randr = new HashMap<String,ArrayList<Rating>>();
@@ -31,21 +45,21 @@ public static int orderid=555;
 public int bill;
 static // Seed Data  
 {
-	l.add(new Locations("Hitech-city"));
+	/*l.add(new Locations("Hitech-city"));
 	l.add(new Locations("Gachibowli"));
 	
 	h.add(new Hotels("1","swagath","Hitech-city"));
 	h.add(new Hotels("2","flechazo","Hitech-city"));
 	h.add(new Hotels("3","taj","Gachibowli"));
 	
-	menu.put("swagath", new ArrayList<Item>());
-	menu.put("flechazo", new ArrayList<Item>());
-	menu.put("taj", new ArrayList<Item>());
+	menu.put("swagath", new ArrayList<Items>());
+	menu.put("flechazo", new ArrayList<Items>());
+	menu.put("taj", new ArrayList<Items>());
 	
-	menu.get("swagath").add(new Item("biryani",100));
-	menu.get("swagath").add(new Item("ice-cream",50));
-	menu.get("flechazo").add(new Item("noodles",70));
-	menu.get("taj").add(new Item("manchuria",90));
+	menu.get("swagath").add(new Items("biryani",100));
+	menu.get("swagath").add(new Items("ice-cream",50));
+	menu.get("flechazo").add(new Items("noodles",70));
+	menu.get("taj").add(new Items("manchuria",90));*/
 }
 
 @RequestMapping("/login")
@@ -60,23 +74,15 @@ public String home(Model model)
 {
 username=CustomAuth.username.toUpperCase();
 model.addAttribute("name",username);
-model.addAttribute("locations", l);	
+model.addAttribute("locations", hotelrepository.findAllLocations());	
 return "home"; 	
 }
 
 @RequestMapping(value="/",method=RequestMethod.POST)
 public String hotels(@ModelAttribute("inp") Locations inp,Model model)
-{
-	
-	List <Hotels> temp = new ArrayList<Hotels>();
-	for(Hotels x :h)
-	{
-		if(x.location.equals(inp.name))
-			temp.add(x);
-	}
-	
+{	
 	model.addAttribute("place", inp.name);
-	model.addAttribute("hotels",temp);
+	model.addAttribute("hotels",hotelrepository.findByLocation(inp.name));
 	return "hotels";	
 }
 
@@ -85,9 +91,9 @@ public String menu(@ModelAttribute("inp") Hotels inp,Model model)
 {
 if(inp.name!=null||inp.name!="")
 hotelName=inp.name; 	
-ArrayList <Item> temp = menu.get(hotelName); 
+//ArrayList <Items> temp = menu.get(hotelName); 
 model.addAttribute("place",hotelName);
-model.addAttribute("menu",temp);
+model.addAttribute("menu",itemrepository.findByHname(hotelName));
 
 return "menu";
 }
@@ -104,32 +110,32 @@ public String menu(@ModelAttribute("inp") OrderDetails inp,Model model)
 	if(order.get(hotelName)==null)
 	{	
 		ArrayList<OrderDetails> al=new ArrayList<OrderDetails>();
-		al.add(new OrderDetails(inp.name,inp.quantity,inp.price));
+		al.add(new OrderDetails(inp.item,inp.quantity,inp.price));
 		order.put(hotelName,al);
 	}
 		else
 	{
 		for(OrderDetails x : order.get(hotelName))
-			if(x.name.equals(inp.name))
+			if(x.item.equals(inp.item))
 			{
 				x.quantity+=inp.quantity;
-				System.out.println(x.name +"!");
+				System.out.println(x.item +"!");
 				flag=1;
 			}
 	
 		if(flag==0)
 			{
 			System.out.println("added!");
-			order.get(hotelName).add(new OrderDetails(inp.name,inp.quantity,inp.price));
+			order.get(hotelName).add(new OrderDetails(inp.item,inp.quantity,inp.price));
 			}
 	}
 	
 	}
 
 
-ArrayList <Item> temp = menu.get(hotelName); 
+//ArrayList <Items> temp = menu.get(hotelName); 
 model.addAttribute("place",hotelName);
-model.addAttribute("menu",temp);
+model.addAttribute("menu",itemrepository.findByHname(hotelName));
 
 int totalBill=0;
 ArrayList<OrderDetails> temp1 = new ArrayList<OrderDetails>();
@@ -138,7 +144,7 @@ ArrayList<OrderDetails> temp1 = new ArrayList<OrderDetails>();
 //for(String x : keys )
 	for(OrderDetails y : order.get(hotelName))
 		{
-		temp1.add(new OrderDetails(y.getName(),y.getQuantity(),y.quantity*y.getPrice()));
+		temp1.add(new OrderDetails(y.getItem(),y.getQuantity(),y.quantity*y.getPrice()));
 		totalBill+=y.quantity*y.getPrice();
 		}
 
@@ -152,14 +158,14 @@ return "menu";
 public String removeItem(@ModelAttribute("inp") OrderDetails inp,Model model)
 {
 	for(OrderDetails x : order.get(hotelName))
-			if(x.getName().equals(inp.name))
+			if(x.getItem().equals(inp.item))
 			{
 				order.get(hotelName).remove(x);
 				break;
 			}
-	ArrayList <Item> temp = menu.get(hotelName); 
+	//ArrayList <Items> temp = menu.get(hotelName); 
 	model.addAttribute("place",hotelName);
-	model.addAttribute("menu",temp);
+	model.addAttribute("menu",itemrepository.findByHname(hotelName));
 	
 	int totalBill=0;
 	ArrayList<OrderDetails> temp1 = new ArrayList<OrderDetails>();
@@ -169,7 +175,7 @@ public String removeItem(@ModelAttribute("inp") OrderDetails inp,Model model)
 		if(order.get(hotelName)!=null)
 		for(OrderDetails y : order.get(hotelName))
 			{
-			temp1.add(new OrderDetails(y.getName(),y.getQuantity(),y.quantity*y.getPrice()));
+			temp1.add(new OrderDetails(y.getItem(),y.getQuantity(),y.quantity*y.getPrice()));
 			totalBill+=y.quantity*y.getPrice();
 			}
 
@@ -182,15 +188,31 @@ public String removeItem(@ModelAttribute("inp") OrderDetails inp,Model model)
 @RequestMapping(value="/checkout",method = RequestMethod.POST)
 public String checkout(Model model)
 {
-if(invoices.get(username)==null)
+/*if(invoices.get(username)==null)
 {
 ArrayList<Invoice> al = new ArrayList<Invoice>();
 al.add(new Invoice(orderid++,hotelName,bill,order.get(hotelName)));
 invoices.put(username, al);
 }
 else
-invoices.get(username).add(new Invoice(orderid++,hotelName,bill,order.get(hotelName)));	
+invoices.get(username).add(new Invoice(orderid++,hotelName,bill,order.get(hotelName)));*/	
 //order.remove("hotelName");
+Random rand = new Random();
+ orderid=rand.nextInt(1000);
+while(orderrepository.findByOrderid(orderid).isEmpty()==false)
+	orderid=rand.nextInt(1000);
+System.out.println(orderid);
+	for(OrderDetails x : order.get(hotelName))
+{
+	Order temp = new Order();
+	temp.setOrderid(orderid);
+	temp.setHname(hotelName);
+	temp.setUname(username);
+	temp.setItem(x.item);
+	temp.setPrice(x.price);
+	temp.setTotal(bill);
+	orderrepository.save(temp);	
+}
 return "checkout";	
 }
 
@@ -223,8 +245,47 @@ public String viewReviews(Model model)
 @RequestMapping(value="/view-orders",method = RequestMethod.POST)
 public String viewUsers(Model model)
 {
+	
 	model.addAttribute("name", username);
-	model.addAttribute("invoices",invoices.get(username));
+	//model.addAttribute("invoices",invoices.get(username));
+	List<Order> x = orderrepository.findByUname(username);
+	List<OrderClone> temp = new ArrayList<OrderClone>();
+	for(Order y : x )
+		temp.add(new OrderClone(y.getOrderid(),y.getUname(),y.getHname(),y.getItem(),y.getPrice(),y.getTotal()));
+	Map<Integer,ArrayList<OrderClone>> tempmap = new HashMap<Integer,ArrayList<OrderClone>>();
+	
+	for(OrderClone y : temp)
+	{
+		if(tempmap.get(y.orderid)==null)
+		{
+			ArrayList<OrderClone> temp1 = new ArrayList<OrderClone>();
+			temp1.add(y);
+			tempmap.put(y.orderid, temp1);
+		}
+		else
+			tempmap.get(y.orderid).add(y);
+	}
+	ArrayList<DisplayOrder> disp = new ArrayList<DisplayOrder>();
+	Set<Integer> keys = tempmap.keySet();
+
+	for(int i : keys)
+	{
+		DisplayOrder tempo=new DisplayOrder();
+		tempo.orderid=i;
+		for(OrderClone e : tempmap.get(i))
+			{
+			tempo.items=new ArrayList<OrderClone>();
+			tempo.items.add(e);
+			tempo.hname=e.hname;
+			tempo.total=e.total;
+			}
+		
+		
+		disp.add(tempo);
+	}
+	 
+	
+	model.addAttribute("invoices",disp);
 	return "vieworder";
 }
 
@@ -236,11 +297,16 @@ public ModelAndView register()
 }
 
 @RequestMapping(value="/register",method = RequestMethod.POST)
-public String addUser(@ModelAttribute("inp") User inp , Model model)
+public String addUser(@ModelAttribute("inp") Users inp , Model model)
 {
-	if(!users.containsKey(inp.uname)&&inp.uname!=""&&inp.password!="")
+	User user = new User();
+	user.setUname(inp.uname);
+	user.setPassword(inp.password);
+	System.out.println(inp.uname);
+	if(usersrepository.findByUname(inp.uname).isEmpty())
 	{
-		users.put(inp.uname, inp.password);
+		if(usersrepository.save(user)!=null);
+		System.out.println("added to db!");
 		return "login";
 	}
 	else
@@ -248,6 +314,7 @@ public String addUser(@ModelAttribute("inp") User inp , Model model)
 		model.addAttribute("error",  "Invalid credentials or UserName is already taken! please choose another one.");
 		return "register";
 	}
+	
 }
 
 @RequestMapping("/login-failure")

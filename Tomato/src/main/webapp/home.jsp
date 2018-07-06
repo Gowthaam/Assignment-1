@@ -17,7 +17,7 @@ HI ${name} , WELCOME TO TOMATO!!
 
 <select name="name">
 <c:forEach var="x" items="${locations}">
-<option value=${x.name} name="name"> ${x.name} </option>
+<option value=${x} name="name"> ${x} </option>
 </c:forEach>
 </select>
 <br /><br />

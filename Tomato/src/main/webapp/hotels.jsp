@@ -16,7 +16,7 @@ Welcome to ${place} !
 
 <select name="name">
 <c:forEach var="x" items="${hotels}">
-<option value=${x.name} name="name"> ${x.name} </option>
+<option value=${x.hname} name="hname"> ${x.hname} </option>
 </c:forEach>
 </select><br />
 

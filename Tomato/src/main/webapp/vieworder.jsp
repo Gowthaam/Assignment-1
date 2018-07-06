@@ -15,23 +15,24 @@ HI ${name} , YOUR ORDERS ::
 <br />
 
 <c:forEach var="x" items="${invoices}">
-<h3>${x.hotelname}</h3> <br />
-Order Id : ${x.id} <br />
+<h3>Order Id :${x.orderid}</h3> <br />
+ <br />
+ Hotel : ${x.hname}
 <table>
 <tr>
 <th>Item-Name</th>
-<th>Item-Quantity</th>
+
 <th>Item-Price</th>
 <tr>
 <c:forEach var="y" items="${x.items}">
 <tr>
-<td>${y.name}</td>
-<td>${y.quantity}</td>
+<td>${y.item}</td>
+
 <td>${y.price}</td>
 </tr>
 </c:forEach>
 </table>
-<h4>Total paid : ${x.total}</h4>
+Total Price : ${x.total}
 </c:forEach>
 
 <br /><br />

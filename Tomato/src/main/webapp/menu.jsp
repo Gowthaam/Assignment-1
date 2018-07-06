@@ -21,10 +21,10 @@
 </tr>
 <c:forEach var="x" items="${menu}">
 <tr>
-<td>${x.name}</td> 
+<td>${x.item}</td> 
 <td>${x.price}</td>
 <form method="post" action="/addItem">
-<input type="hidden" name="name" value="${x.name}">
+<input type="hidden" name="item" value="${x.item}">
 <td><input type="number" name="quantity" value="0"></td>
 <input type="hidden" name="price" value="${x.price}">
 <td><input type="submit" value="Add" >
@@ -46,11 +46,11 @@
 </tr>
 <c:forEach var="x" items="${cart}">
 <tr>
-<td>${x.name}</td> 
+<td>${x.item}</td> 
 <td>${x.price}</td>
 <td>${x.quantity}</td>
 <form method="post" action="/removeItem">
-<input type="hidden" name="name" value="${x.name}">
+<input type="hidden" name="item" value="${x.item}">
 <td><input type="submit" value="Remove" >
 </form>
 </tr> 

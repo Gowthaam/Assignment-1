@@ -1,0 +1,41 @@
+package com;
+
+import java.util.*;
+
+public class DisplayOrder {
+
+	int orderid;
+	//String hname;
+	ArrayList<OrderClone> items;
+	
+	public DisplayOrder()
+	{}
+	
+	public DisplayOrder(int orderid,ArrayList<OrderClone> items)
+	{
+		orderid=this.orderid;
+		items=this.items;
+	}
+	
+	public int getOrderid()
+	{
+		return orderid;
+	}
+	
+	public void setOrderid(int orderid)
+	{
+		this.orderid=orderid;
+	}
+	
+	public ArrayList<OrderClone> getItems()
+	{
+		return items;
+	}
+	
+	public void setItems(ArrayList<OrderClone> items)
+	{
+		this.items=items;
+	}
+	
+	
+}

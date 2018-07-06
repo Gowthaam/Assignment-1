@@ -1,0 +1,30 @@
+package com.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="location")
+public class Location {
+	
+	
+	@Id
+	@Column(name="location")
+	private String location;
+	
+	public Location()
+	{}
+	
+	
+	public String getLocation()
+	{
+		return location;
+	}
+	public void setLocation(Object location)
+	{
+		this.location=(String)location;
+	}
+}
+	
