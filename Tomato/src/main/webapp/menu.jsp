@@ -11,7 +11,7 @@
 </head>
 <body>
 <br />
-
+<a href="/view-reviews">View Ratings and Reviews</a>
 <table>
 <tr>
 <th>Name</th>

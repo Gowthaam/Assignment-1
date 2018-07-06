@@ -22,12 +22,14 @@ public static List <Hotels> h = new ArrayList<Hotels>();
 public static Map<String,ArrayList<Item>> menu = new HashMap<String,ArrayList<Item>>();
 public  Map<String,ArrayList<OrderDetails>> order = new HashMap<String,ArrayList<OrderDetails>>();
 public Map<String,ArrayList<Invoice>> invoices = new HashMap<String,ArrayList<Invoice>>();
+public Map<String,ArrayList<Rating>> randr = new HashMap<String,ArrayList<Rating>>();
+
 
 public static String hotelName = new String("");
 public static String username = new String("");
 public static int orderid=555;
 public int bill;
-static
+static // Seed Data  
 {
 	l.add(new Locations("Hitech-city"));
 	l.add(new Locations("Gachibowli"));
@@ -43,7 +45,7 @@ static
 	menu.get("swagath").add(new Item("biryani",100));
 	menu.get("swagath").add(new Item("ice-cream",50));
 	menu.get("flechazo").add(new Item("noodles",70));
-	
+	menu.get("taj").add(new Item("manchuria",90));
 }
 
 @RequestMapping("/login")
@@ -191,6 +193,32 @@ invoices.get(username).add(new Invoice(orderid++,hotelName,bill,order.get(hotelN
 //order.remove("hotelName");
 return "checkout";	
 }
+
+@RequestMapping(value="/submit-rating",method=RequestMethod.POST)
+public String review(@ModelAttribute("inp") Rating inp,Model model)
+{
+	Rating temp = new Rating(username,inp.rating,inp.review);
+	if(randr.get(hotelName)==null)
+	{
+		ArrayList<Rating> temp1 = new ArrayList<Rating>();
+		temp1.add(temp);
+		randr.put(hotelName,temp1);
+	}
+	else
+		randr.get(hotelName).add(temp);
+	
+	return "thanks";
+}
+
+@RequestMapping("view-reviews")
+public String viewReviews(Model model)
+{
+	model.addAttribute("name",hotelName);
+	model.addAttribute("reviews",randr.get(hotelName));
+
+	return "view-reviews";
+}
+
 
 @RequestMapping(value="/view-orders",method = RequestMethod.POST)
 public String viewUsers(Model model)
