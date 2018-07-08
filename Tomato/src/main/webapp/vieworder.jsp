@@ -7,26 +7,33 @@
 <html lang="en">
 <head>
 
-HI ${name} , WELCOME TO TOMATO!!
+HI ${name} , YOUR ORDERS ::
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
 <br />
 <br />
-<form method="post" action="/">
 
-<select name="name">
-<c:forEach var="x" items="${locations}">
-<option value=${x.name} name="name"> ${x.name} </option>
+<c:forEach var="x" items="${invoices}">
+<h3>${x.hotelname}</h3> <br />
+Order Id : ${x.id} <br />
+<table>
+<tr>
+<th>Item-Name</th>
+<th>Item-Quantity</th>
+<th>Item-Price</th>
+<tr>
+<c:forEach var="y" items="${x.items}">
+<tr>
+<td>${y.name}</td>
+<td>${y.quantity}</td>
+<td>${y.price}</td>
+</tr>
 </c:forEach>
-</select>
-<br /><br />
+</table>
+<h4>Total paid : ${x.total}</h4>
+</c:forEach>
 
-<input type="submit" value="submit"><br /><br />
-</form>
-<form method="post" action="/view-orders">
-<input type="submit" value="View-Orders">
-</form>
 <br /><br />
 <form  method="post" action="/app-logout" >
 <input type="submit" value="Logout">

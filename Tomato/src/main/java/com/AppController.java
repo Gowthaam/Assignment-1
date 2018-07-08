@@ -21,8 +21,12 @@ public static List <Locations> l = new ArrayList<Locations>();
 public static List <Hotels> h = new ArrayList<Hotels>();
 public static Map<String,ArrayList<Item>> menu = new HashMap<String,ArrayList<Item>>();
 public  Map<String,ArrayList<OrderDetails>> order = new HashMap<String,ArrayList<OrderDetails>>();
+public Map<String,ArrayList<Invoice>> invoices = new HashMap<String,ArrayList<Invoice>>();
 
 public static String hotelName = new String("");
+public static String username = new String("");
+public static int orderid=555;
+public int bill;
 static
 {
 	l.add(new Locations("Hitech-city"));
@@ -52,8 +56,8 @@ return "login";
 @RequestMapping("/")
 public String home(Model model)
 {
-String name=CustomAuth.username.toUpperCase();
-model.addAttribute("name",name);
+username=CustomAuth.username.toUpperCase();
+model.addAttribute("name",username);
 model.addAttribute("locations", l);	
 return "home"; 	
 }
@@ -136,7 +140,7 @@ ArrayList<OrderDetails> temp1 = new ArrayList<OrderDetails>();
 		totalBill+=y.quantity*y.getPrice();
 		}
 
-
+bill=totalBill;
 model.addAttribute("cart", temp1);
 model.addAttribute("totalBill",totalBill);
 return "menu";
@@ -167,7 +171,7 @@ public String removeItem(@ModelAttribute("inp") OrderDetails inp,Model model)
 			totalBill+=y.quantity*y.getPrice();
 			}
 
-
+		bill=totalBill;
 	model.addAttribute("cart", temp1);
 	model.addAttribute("totalBill",totalBill);
 	return "menu";
@@ -176,15 +180,23 @@ public String removeItem(@ModelAttribute("inp") OrderDetails inp,Model model)
 @RequestMapping(value="/checkout",method = RequestMethod.POST)
 public String checkout(Model model)
 {
+if(invoices.get(username)==null)
+{
+ArrayList<Invoice> al = new ArrayList<Invoice>();
+al.add(new Invoice(orderid++,hotelName,bill,order.get(hotelName)));
+invoices.put(username, al);
+}
+else
+invoices.get(username).add(new Invoice(orderid++,hotelName,bill,order.get(hotelName)));	
 return "checkout";	
 }
 
 @RequestMapping(value="/view-orders",method = RequestMethod.POST)
 public String viewUsers(Model model)
 {
-	
-	
-	return "viewUser";
+	model.addAttribute("name", username);
+	model.addAttribute("invoices",invoices.get(username));
+	return "vieworder";
 }
 
 
