@@ -6,17 +6,16 @@
 
 <html lang="en">
 <head>
-
-HI ${name} , WELCOME TO TOMATO!!
+Welcome to ${place} !
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
 <br />
-<br />
-<form method="post" action="/">
+
+<form method="post" action="/menu">
 
 <select name="name">
-<c:forEach var="x" items="${locations}">
+<c:forEach var="x" items="${hotels}">
 <option value=${x.name} name="name"> ${x.name} </option>
 </c:forEach>
 </select><br />

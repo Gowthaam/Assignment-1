@@ -6,27 +6,19 @@
 
 <html lang="en">
 <head>
-
-HI ${name} , WELCOME TO TOMATO!!
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 </head>
 <body>
 <br />
+<h2> Thank you! You're order has been placed!</h2>
 <br />
-<form method="post" action="/">
-
-<select name="name">
-<c:forEach var="x" items="${locations}">
-<option value=${x.name} name="name"> ${x.name} </option>
-</c:forEach>
-</select><br />
-
-<input type="submit" value="submit">
-
+<form method="post" action="/view-orders">
+<input type="submit" value="View-Orders">
 </form>
-<br /><br />
+<br />
 <form  method="post" action="/app-logout" >
 <input type="submit" value="Logout">
 </form>
+
 </body>
 </html>

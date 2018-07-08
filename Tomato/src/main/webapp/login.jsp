@@ -1,16 +1,18 @@
 <html>
 
 <body>
-<form action="login" method="post">
+<form method="post" action="/app-login">
 
-<input type="text" name="username" value='' >
+UserName : <input type="text" name="username" value='' ><br/>
 
-<input type="password" name="password" value=''>
+Password : <input type="password" name="password" value=''><br/>
 
-<input type="submit" value="submit">
+<input type="submit" value="submit"><br/>
 
 
 </form>
+
+<a href="/register">New User?Sign-up</a>
 </body>
 
 </html>
