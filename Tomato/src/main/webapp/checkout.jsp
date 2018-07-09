@@ -16,6 +16,13 @@
 <input type="submit" value="View-Orders">
 </form>
 <br />
+PLEASE PROVIDE RATING AND REVIEW TO HELP OTHER CUSTOMERS!<br />
+<form method="post" action="/rating">
+Enter your Rating on a scale 0-5 : <input type=number name="rating" min=0 max=5><br />
+Enter your Review : <textarea name="review" rows="5" cols="30"></textarea><br />
+<input type=submit value="Post"><br />
+</form>
+<br /><br />
 <form  method="post" action="/app-logout" >
 <input type="submit" value="Logout">
 </form>

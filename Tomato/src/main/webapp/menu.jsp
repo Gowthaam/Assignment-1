@@ -60,10 +60,12 @@
 <br />
 
 <h3>Total Bill : ${totalBill}</h3>
+<c:if test = "${totalBill > 0}" >
 <br />
 <form method="post" action="/checkout">
 <input type="submit" value="Checkout">
 </form>
+</c:if>
 
 <br />
 <form  method="post" action="/app-logout" >

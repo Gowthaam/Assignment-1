@@ -188,6 +188,7 @@ invoices.put(username, al);
 }
 else
 invoices.get(username).add(new Invoice(orderid++,hotelName,bill,order.get(hotelName)));	
+//order.remove("hotelName");
 return "checkout";	
 }
 
