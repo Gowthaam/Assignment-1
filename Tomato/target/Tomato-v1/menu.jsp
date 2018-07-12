@@ -24,12 +24,12 @@ h1,h2,h3,h4,h5,h6 {
 <!-- Navbar (sit on top) -->
 <div class="w3-top">
   <div class="w3-bar w3-white w3-padding w3-card" style="letter-spacing:4px;">
-    <a href="/" class="w3-bar-item w3-button">Tomato ~ The Food Ordering App</a>
+    <a href="/Tomato-v1/" class="w3-bar-item w3-button">Tomato ~ The Food Ordering App</a>
     <!-- Right-sided navbar links. Hide them on small screens -->
     <div class="w3-right w3-hide-small">
-    <a href="/view-reviews"class="w3-bar-item w3-button">VIEW RATINGS & REVIEWS</a>
-    <a href="/view-orders" class="w3-bar-item w3-button">VIEW-ORDERS</a>
-		<a href="/app-logout" class="w3-bar-item w3-button">LOGOUT</a>
+    <a href="/Tomato-v1/view-reviews"class="w3-bar-item w3-button">VIEW RATINGS & REVIEWS</a>
+    <a href="/Tomato-v1/view-orders" class="w3-bar-item w3-button">VIEW-ORDERS</a>
+		<a href="/Tomato-v1/app-logout" class="w3-bar-item w3-button">LOGOUT</a>
     </div>
   </div>
 </div>
@@ -53,7 +53,7 @@ h1,h2,h3,h4,h5,h6 {
 <tr>
 <td>${x.item}</td> 
 <td>${x.price}</td>
-<form method="post" action="/addItem">
+<form method="post" action="/Tomato-v1/addItem">
 <input type="hidden" name="item" value="${x.item}">
 <td><input type="number" name="quantity" value="0"></td>
 <input type="hidden" name="price" value="${x.price}">
@@ -79,7 +79,7 @@ h1,h2,h3,h4,h5,h6 {
 <td>${x.item}</td> 
 <td>${x.price}</td>
 <td>${x.quantity}</td>
-<form method="post" action="/removeItem">
+<form method="post" action="/Tomato-v1/removeItem">
 <input type="hidden" name="item" value="${x.item}">
 <td><input type="submit" value="Remove" >
 </form>
@@ -92,7 +92,7 @@ h1,h2,h3,h4,h5,h6 {
 <h3>Total Bill : ${totalBill}</h3>
 <c:if test = "${totalBill > 0}" >
 <br />
-<form method="post" action="/checkout">
+<form method="post" action="/Tomato-v1/checkout">
 <input class="w3-button w3-light-grey w3-section" type="submit" value="CHECKOUT">
 </form>
 </c:if>

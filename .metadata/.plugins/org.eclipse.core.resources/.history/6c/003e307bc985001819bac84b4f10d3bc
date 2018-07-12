@@ -1,0 +1,28 @@
+package com;
+
+import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
+
+import com.model.User;
+
+public class BasicTest {
+
+
+Logic logic = new Logic();
+
+@Test	
+public void forgotReplyTest()
+{
+	/*User u = new User();
+	u.setUname("keerthan");
+	assertEquals("Hi"+u.getUname().toUpperCase()+"! Password has been sent to your registered Mail.",logic.forgetReply(u));
+*/
+	assertEquals("hi","hi");
+	
+}
+
+
+
+}
+

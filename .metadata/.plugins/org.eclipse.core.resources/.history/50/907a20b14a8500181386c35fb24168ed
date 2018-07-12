@@ -1,0 +1,33 @@
+package com;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
+
+@ActiveProfiles(value="test")
+public class BasicTest {
+
+	@Autowired
+	MockMvc mvc; 
+	private AppController appcontroller;
+	
+	@Before
+	void setup()
+	{
+		appcontroller = Mockito.mock(AppController.class);
+		
+	}
+	
+	@Test
+	public void unauthorizedAccess() throws Exception {
+	   
+	    
+		mockMvc.perform(get("http://localhost:8080/menu")).andExpect(status().isUnauthorized());
+		
+	}
+}

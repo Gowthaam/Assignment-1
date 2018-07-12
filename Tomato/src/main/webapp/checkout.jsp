@@ -22,11 +22,11 @@ h1,h2,h3,h4,h5,h6 {
 <!-- Navbar (sit on top) -->
 <div class="w3-top">
   <div class="w3-bar w3-white w3-padding w3-card" style="letter-spacing:4px;">
-    <a href="/" class="w3-bar-item w3-button">Tomato ~ The Food Ordering App</a>
+    <a href="/Tomato-v1/" class="w3-bar-item w3-button">Tomato ~ The Food Ordering App</a>
     <!-- Right-sided navbar links. Hide them on small screens -->
     <div class="w3-right w3-hide-small">
-		<a href="/view-orders" class="w3-bar-item w3-button">VIEW-ORDERS</a>
-		<a href="/app-logout" class="w3-bar-item w3-button">LOGOUT</a>
+		<a href="/Tomato-v1/view-orders" class="w3-bar-item w3-button">VIEW-ORDERS</a>
+		<a href="/Tomato-v1/app-logout" class="w3-bar-item w3-button">LOGOUT</a>
     </div>
   </div>
 </div>
@@ -39,7 +39,7 @@ h1,h2,h3,h4,h5,h6 {
 <div class="w3-container w3-padding-64" id="contact">
     <h3>Thank you! You're order has been placed!</h3><br>
     <h5>PLEASE PROVIDE RATING AND REVIEW TO HELP OTHER CUSTOMERS!</h5>
-    <form action="/submit-rating" method="post">
+    <form action="/Tomato-v1/submit-rating" method="post">
       <p>RATING :<input  type="number"  name="rating" min=0 max=5 value=-1 required></p>
       <p><input class="w3-input w3-padding-16" type="textarea" placeholder="Write your review here.." rows="5" cols="30" name="review" required></p>
       <p><button class="w3-button w3-light-grey w3-section" type="submit">SUBMIT</button></p>

@@ -1,0 +1,5 @@
+package com.errorhandling;
+
+public class ApiError {
+
+}

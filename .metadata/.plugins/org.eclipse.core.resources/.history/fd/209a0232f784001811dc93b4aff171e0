@@ -1,0 +1,25 @@
+package errorhandling;
+
+import org.hibernate.exception.DataException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+@ControllerAdvice
+public class ErrorHandler {
+
+@ExceptionHandler(DataException.class)
+public ResponseEntity<CustomException> basicException(DataException e) throws Exception
+{
+CustomException ce = new CustomException();
+ce.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+ce.setMessage(e.getMessage());
+System.out.println("error handled");
+return new ResponseEntity<CustomException>(ce,HttpStatus.INTERNAL_SERVER_ERROR);
+}
+
+
+	
+	
+}

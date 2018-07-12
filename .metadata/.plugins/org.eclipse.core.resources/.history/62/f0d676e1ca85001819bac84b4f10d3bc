@@ -1,0 +1,27 @@
+package com;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.model.User;
+import com.repository.UsersRepository;
+
+public class Logic {
+
+	@Autowired 
+	UsersRepository usersrepository;
+	
+public String forgetReply(User inp)
+{
+	if(usersrepository.findByUname(inp.getUname()).isEmpty())
+	{
+	return "Username not found ! Please Register";
+	}
+else
+	{
+	return "Hi"+inp.getUname().toUpperCase()+"! Password has been sent to your registered Mail.";
+	}	
+	
+}
+	
+	
+}

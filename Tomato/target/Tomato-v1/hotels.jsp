@@ -23,11 +23,11 @@ h1,h2,h3,h4,h5,h6 {
 <!-- Navbar (sit on top) -->
 <div class="w3-top">
   <div class="w3-bar w3-white w3-padding w3-card" style="letter-spacing:4px;">
-    <a href="/" class="w3-bar-item w3-button">Tomato ~ The Food Ordering App</a>
+    <a href="/Tomato-v1/" class="w3-bar-item w3-button">Tomato ~ The Food Ordering App</a>
     <!-- Right-sided navbar links. Hide them on small screens -->
     <div class="w3-right w3-hide-small">
-    <a href="/view-orders" class="w3-bar-item w3-button">VIEW-ORDERS</a>
-		<a href="/app-logout" class="w3-bar-item w3-button">LOGOUT</a>
+    <a href="/Tomato-v1/view-orders" class="w3-bar-item w3-button">VIEW-ORDERS</a>
+		<a href="/Tomato-v1/app-logout" class="w3-bar-item w3-button">LOGOUT</a>
     </div>
   </div>
 </div>
@@ -43,7 +43,7 @@ h1,h2,h3,h4,h5,h6 {
 	<h6>Welcome to ${place} !<h6>
 	
     <h3>CHOOSE YOUR RESTAURANT</h3><br>
-    <form action="/menu" method="POST">
+    <form action="/Tomato-v1/menu" method="POST">
       
       <select name="name" class="w3-input w3-padding-16">
 	<c:forEach var="x" items="${hotels}">
