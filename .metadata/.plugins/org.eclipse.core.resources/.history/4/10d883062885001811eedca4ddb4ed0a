@@ -1,0 +1,21 @@
+package errorhandling;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+@Controller
+@ControllerAdvice
+public class ErrorHandler {
+
+	@ExceptionHandler(CustomException.class)
+	public String basicException(CustomException e,Model model) throws CustomException
+	{
+	CustomException ce = e;
+	model.addAttribute("error",ce.getMessage());
+	return "error";
+	}
+	
+	
+}

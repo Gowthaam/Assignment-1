@@ -2,28 +2,28 @@ package com;
 
 public class OrderDetails {
 
-	 String name;
+	 String item;
 	 int quantity;
 	 int price;
 	 
 	 public OrderDetails()
 	 {}
 	 
-	 public OrderDetails(String name,int quantity,int price)
+	 public OrderDetails(String item,int quantity,int price)
 	 {
-		 this.name=name;
+		 this.item=item;
 		 this.quantity=quantity;
 		 this.price=price;
 	 }
 	
-	 public String getName()
+	 public String getItem()
 	 {
-		 return name;
+		 return item;
 	 }
 	 
-	 public void setName(String name)
+	 public void setItem(String item)
 	 {
-		 this.name=name;
+		 this.item=item;
 	 }
 	 
 	 public int getQuantity()

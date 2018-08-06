@@ -1,0 +1,2 @@
+insert into users values ("prashanth","prashanth");
+insert into users values ("keerthan","prashanth");
